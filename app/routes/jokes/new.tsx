@@ -69,9 +69,33 @@ export default () => {
         </div>
         <div>
           <label>
-            Content: <textarea name="content" />
+            Content:{" "}
+            <textarea
+              defaultValue={actionData?.fields?.content}
+              name="content"
+              aria-invalid={
+                Boolean(actionData?.fieldErrors?.content) || undefined
+              }
+              aria-errormessage={
+                actionData?.fieldErrors?.content ? "content-error" : undefined
+              }
+            />
           </label>
+          {actionData?.fieldErrors?.content ? (
+            <p
+              className="form-validation-error"
+              role="alert"
+              id="content-error"
+            >
+              {actionData.fieldErrors.content}
+            </p>
+          ) : null}
         </div>
+        {actionData?.formError ? (
+          <p className="form-validation-error" role="alert">
+            {actionData.formError}
+          </p>
+        ) : null}
         <div>
           <button type="submit" className="button">
             Add
