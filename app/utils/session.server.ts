@@ -60,6 +60,14 @@ export async function getUserId(request: Request) {
   return userId;
 }
 
+export async function getUser(request: Request) {
+  const userId = await getUserId(request);
+  if (!userId) return null;
+  return db.user.findUnique({
+    where: { id: userId },
+  });
+}
+
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
