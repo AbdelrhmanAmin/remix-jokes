@@ -2,6 +2,7 @@ import type { ActionFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
+import { getSession } from "~/utils/session.server";
 
 type ActionData = {
   formError?: string;
@@ -18,6 +19,8 @@ type ActionData = {
 const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
   const formData = await request.formData();
   const [name, content] = [formData.get("name"), formData.get("content")];
   if (typeof name !== "string" || typeof content !== "string") {
@@ -36,7 +39,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const joke = await db.joke.create({
-    data: fields,
+    data: { jokesterId: session.get("userId"), ...fields },
   });
 
   return redirect(`/jokes/${joke.id}`);
