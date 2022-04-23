@@ -19,6 +19,17 @@ export async function login({ username, password }: LoginForm) {
   return { id: user.id, username };
 }
 
+export async function register({ username, password }: LoginForm) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await db.user.create({
+    data: {
+      username,
+      passwordHash: hashedPassword,
+    },
+  });
+  return { id: user.id, username };
+}
+
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
   throw new Error("SESSION_SECRET must be set");
@@ -83,7 +94,7 @@ export async function requireUserId(
 
 export async function logout(request: Request, redirectTo: string) {
   const session = await getUserSession(request);
-  
+
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await destroySession(session),

@@ -5,7 +5,12 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, Link, useSearchParams } from "@remix-run/react";
-import { createUserSession, getUserId, login } from "~/utils/session.server";
+import {
+  createUserSession,
+  getUserId,
+  login,
+  register,
+} from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 import stylesUrl from "~/styles/login.css";
 
@@ -110,11 +115,9 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
       // create the user
+      const user = await register({ username, password });
       // create their session and redirect to /jokes
-      return badRequest({
-        fields,
-        formError: "Not implemented",
-      });
+      return await createUserSession(user.id, redirectTo);
     }
     default: {
       return badRequest({
