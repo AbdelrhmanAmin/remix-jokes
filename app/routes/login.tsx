@@ -20,6 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     // Redirect to the home page if they are already signed in.
     return redirect("/jokes");
   }
+  return null;
 };
 
 function validateUsername(username: unknown) {
