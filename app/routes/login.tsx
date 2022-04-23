@@ -116,6 +116,12 @@ export const action: ActionFunction = async ({ request }) => {
       }
       // create the user
       const user = await register({ username, password });
+      if (!user) {
+        return badRequest({
+          fields,
+          formError: `Something went wrong trying to create a new user.`,
+        });
+      }
       // create their session and redirect to /jokes
       return await createUserSession(user.id, redirectTo);
     }
