@@ -80,3 +80,13 @@ export async function requireUserId(
   }
   return userId;
 }
+
+export async function logout(request: Request, redirectTo: string) {
+  const session = await getUserSession(request);
+  
+  return redirect(redirectTo, {
+    headers: {
+      "Set-Cookie": await destroySession(session),
+    },
+  });
+}
