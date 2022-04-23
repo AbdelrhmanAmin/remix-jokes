@@ -5,7 +5,7 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, Link, useSearchParams } from "@remix-run/react";
-import { createUserSession, getSession, login } from "~/utils/session.server";
+import { createUserSession, getUserId, login } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 import stylesUrl from "~/styles/login.css";
 
@@ -14,9 +14,9 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const session = await getSession(request.headers.get("Cookie"));
+  const userId = await getUserId(request);
 
-  if (session.has("userId")) {
+  if (userId) {
     // Redirect to the home page if they are already signed in.
     return redirect("/jokes");
   }
@@ -57,7 +57,6 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
