@@ -5,6 +5,7 @@ async function seed() {
   const user = await db.user.create({
     data: {
       username: "user",
+      // password: twixrox
       passwordHash:
         "$2b$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdWoXehVzJptJ/op0lSsvqNu/1u",
     },
