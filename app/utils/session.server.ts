@@ -39,7 +39,7 @@ const { getSession, commitSession, destroySession } =
     },
   });
 
-export const createUserSession = async (userId: number, redirectTo: string) => {
+export const createUserSession = async (userId: string, redirectTo: string) => {
   const session = await getSession();
   session.set("userId", userId);
   return redirect(redirectTo, {
@@ -48,3 +48,5 @@ export const createUserSession = async (userId: number, redirectTo: string) => {
     },
   });
 };
+
+export { getSession, commitSession, destroySession };

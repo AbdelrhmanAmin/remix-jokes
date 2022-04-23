@@ -1,12 +1,25 @@
-import type { ActionFunction, LinksFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LinksFunction,
+  LoaderFunction,
+} from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useActionData, Link, useSearchParams } from "@remix-run/react";
-import { login } from "~/utils/session.server";
+import { createUserSession, getSession, login } from "~/utils/session.server";
 import { db } from "~/utils/db.server";
 import stylesUrl from "~/styles/login.css";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  if (session.has("userId")) {
+    // Redirect to the home page if they are already signed in.
+    return redirect("/jokes");
+  }
 };
 
 function validateUsername(username: unknown) {
@@ -44,6 +57,7 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
+
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -83,6 +97,7 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
       // if there is a user, create their session and redirect to /jokes
+      return await createUserSession(user.id, redirectTo);
     }
     case "register": {
       const userExists = await db.user.findFirst({
