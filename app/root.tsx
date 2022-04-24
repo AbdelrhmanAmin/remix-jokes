@@ -1,5 +1,5 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import { LiveReload, Outlet, Links, useCatch, Meta } from "@remix-run/react";
+import { LiveReload, Outlet, Links, useCatch, Meta, Scripts } from "@remix-run/react";
 
 import globalStylesUrl from "./styles/global.css";
 import globalMediumStylesUrl from "./styles/global-medium.css";
@@ -50,6 +50,7 @@ function Document({
     <html lang="en">
       <head>
         <Meta />
+        <Scripts />
         <title>{title}</title>
         <Links />
       </head>
