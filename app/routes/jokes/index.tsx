@@ -22,3 +22,7 @@ export default () => {
     </div>
   );
 };
+
+export function ErrorBoundary() {
+  return <div className="error-container">Sorry an error happened.</div>;
+}
