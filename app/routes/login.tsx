@@ -2,6 +2,7 @@ import type {
   ActionFunction,
   LinksFunction,
   LoaderFunction,
+  MetaFunction,
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, Link, useSearchParams } from "@remix-run/react";
@@ -63,6 +64,13 @@ type ActionData = {
 };
 
 const badRequest = (data: ActionData) => json(data, { status: 400 });
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Remix Jokes | Login",
+    description: "Login to submit your own jokes to Remix Jokes!",
+  };
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
